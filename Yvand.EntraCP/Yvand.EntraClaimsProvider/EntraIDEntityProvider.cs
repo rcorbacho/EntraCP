@@ -590,7 +590,7 @@ namespace Yvand.EntraClaimsProvider
                                 bool addUser = false;
                                 if (tenant.ExcludeMemberUsers == false || tenant.ExcludeGuestUsers == false)
                                 {
-                                    bool userIsAMember = String.Equals(user.UserType, ClaimsProviderConstants.MEMBER_USERTYPE, StringComparison.InvariantCultureIgnoreCase);
+                                    bool userIsAMember = String.Equals(user.UserType, ClaimsProviderConstants.MEMBER_USERTYPE, StringComparison.InvariantCultureIgnoreCase) || user.UserType == null;
                                     bool userIsAGuest = !userIsAMember;
 
                                     if (tenant.ExcludeMemberUsers == false && tenant.ExcludeGuestUsers == false)
