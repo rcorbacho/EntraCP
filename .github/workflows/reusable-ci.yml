@@ -52,6 +52,7 @@ jobs:
       project_name: ${{ inputs.project_name }}
       tag_version: ${{ needs.preparation.outputs.tag_version || '' }}
       year: ${{ needs.preparation.outputs.year }}
+      signing_pfx: AccionaTemp.EntraCP.pfx # Name of the signing key file
     outputs:
       project_version: ${{ steps.set-assembly-version.outputs.assembly_file_version }}
     steps:
@@ -88,12 +89,12 @@ jobs:
 
     # Decode the base 64 encoded signing key
     # Key encoded using PowerShell Core:
-    # $cert = Get-Content "C:\...\key.snk" -AsByteStream -ReadCount 
+    # $cert = Get-Content "C:\...\key.pfx" -AsByteStream -ReadCount 0
     # [System.Convert]::ToBase64String($cert) | Out-File "C:\...\key_b64Encoded.txt"
     - name: Decode the signing key
       run: |
         $data = [System.Convert]::FromBase64String("${{ secrets.base64_encoded_signingkey }}")
-        $certificatePath = Join-Path -Path ${{ env.project_name }} -ChildPath "${{ env.project_name }}.snk"
+        $certificatePath = Join-Path -Path ${{ env.project_name }} -ChildPath "${{ env.signing_pfx }}"
         [IO.File]::WriteAllBytes($certificatePath, $data)
 
     # Build the application
@@ -119,7 +120,7 @@ jobs:
         }
 
     - name: Remove the signing key
-      run: Remove-Item -path "${{ env.project_name }}/${{ env.project_name }}.snk"
+      run: Remove-Item -path "${{ env.project_name }}/${{ env.signing_pfx }}"
 
     - name: Upload artifact - wsp solution
       uses: actions/upload-artifact@v5

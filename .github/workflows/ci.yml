@@ -13,6 +13,7 @@ on:
     branches:
     - dev
     - 'releases/**'
+    - dev-usertype-null-as-member # temporary branch for testing
     tags:
       - "v*"
   pull_request:
@@ -20,7 +21,7 @@ on:
 
 jobs:
   call-ci-workflow:
-    uses: Yvand/EntraCP/.github/workflows/reusable-ci.yml@dev
+    uses: rcorbacho/EntraCP/.github/workflows/reusable-ci.yml@dev-usertype-null-as-member
     with:
       project_name: ${{ vars.PROJECT_NAME }}
       publish_release: ${{ inputs.publish_release || false }}
